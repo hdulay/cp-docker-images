@@ -70,3 +70,9 @@ $ docker-compose up -d ksql-cli
 ```bash
 $ docker-compose up -d rest-proxy
 ```
+
+
+
+# DATA
+
+https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html

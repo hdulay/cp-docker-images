@@ -93,7 +93,10 @@ services:
       PORT: 9021
 
   connect:
-    image: confluentinc/cp-kafka-connect:5.2.1
+    image: xxx/kafka-connect-datagen:latest
+    build:
+      context: .
+      dockerfile: datagen/Dockerfile
     hostname: connect
     container_name: connect
     depends_on:

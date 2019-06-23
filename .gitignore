@@ -2,7 +2,6 @@
 venv
 __pycache__
 *.pyc
-*ipynb*
 *cache*
 .idea
 *.csr
@@ -21,4 +20,5 @@ java/.classpath
 java/.project
 java/.settings/
 .vscode/*
+*.ipynb
 examples/cp-all-in-one-cloud/delta_configs/

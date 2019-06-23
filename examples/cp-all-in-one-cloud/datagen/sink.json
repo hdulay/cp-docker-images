@@ -1,0 +1,10 @@
+{
+	"name": "users-sink",
+	"config": {
+		"name": "users-sink",
+		"connector.class": "org.apache.kafka.connect.file.FileStreamSinkConnector",
+		"topics": "users,pageviews",
+		"file": "/tmp/file-sink.txt",
+		"consumer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+	}
+}

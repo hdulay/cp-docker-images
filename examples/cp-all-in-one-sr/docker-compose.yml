@@ -47,6 +47,42 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
 
+  schema-registry2:
+    image: confluentinc/cp-schema-registry:5.2.1
+    hostname: schema-registry2
+    container_name: schema-registry2
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    ports:
+      - "8381:8381"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry2
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8381
+
+  schema-registry-lb:
+    image: example/nginx-loadbalancer
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    hostname: schema-registry-lb
+    container_name: schema-registry-lb
+    depends_on:
+      - schema-registry
+      - schema-registry2
+    ports:
+      - '8281:8281'
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/
+    environment:
+      - SR1=schema-registry:8081
+      - SR2=schema-registry2:8381
+      - PORT=8281
+      - HOST=schema-registry-lb
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/nginx.template > /etc/nginx/conf.d/nginx.conf && exec nginx -g 'daemon off;'"
+
   connect:
     image: confluentinc/kafka-connect-datagen:latest
     build:
@@ -171,7 +207,7 @@ services:
     depends_on:
       - zookeeper
       - broker
-      - schema-registry
+      - schema-registry-lb
     ports:
       - 8082:8082
     hostname: rest-proxy
@@ -180,16 +216,7 @@ services:
       KAFKA_REST_HOST_NAME: rest-proxy
       KAFKA_REST_BOOTSTRAP_SERVERS: 'broker:29092'
       KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
-      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry-lb:8281'
 
-  jupyter:
-      build: jupyter
-      ports:
-        - 8888:8888
-      hostname: jupyter
-      container_name: jupyter
-      depends_on:
-        - broker
-        - connect
-        - ksql-server
+
      

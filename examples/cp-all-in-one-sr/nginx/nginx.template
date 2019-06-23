@@ -1,0 +1,10 @@
+upstream backend {
+	server ${SR1};
+	server ${SR2};
+}
+server {
+	listen ${PORT};
+	location / {
+		proxy_pass http://backend;
+	}
+}

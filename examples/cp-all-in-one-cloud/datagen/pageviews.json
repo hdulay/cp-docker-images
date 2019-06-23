@@ -1,0 +1,12 @@
+{
+	"name": "pageviews",
+	"config": {
+        "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
+		"key.converter": "org.apache.kafka.connect.storage.StringConverter",
+		"kafka.topic": "pageviews",
+		"max.interval": "100",
+		"iterations": "1000000000",
+		"quickstart": "pageviews",
+		"producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+    }
+}
