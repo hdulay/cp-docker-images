@@ -6,7 +6,4 @@ cluster:
 
 ps:
 	docker-compose ps
-
-down:
-	docker-compose down
 	
